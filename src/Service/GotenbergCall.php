@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class GotenbergCall
@@ -29,7 +30,17 @@ class GotenbergCall
             $this->logger->info('Gotenberg response status code: ' . $statusCode);
 
             if ($statusCode === 200) {
-                return ['success' => true, 'content' => $response->getContent()];
+                $pdfContent = $response->getContent();
+                $fileName = uniqid('document_', true) . '.pdf';
+                $pdfFilePath = 'pdfs/' . $fileName;
+
+                $filesystem = new Filesystem();
+                $filesystem->dumpFile($pdfFilePath, $pdfContent);
+
+                if ($filesystem->exists($pdfFilePath)) {
+                    return ['success' => true, 'content' => $pdfFilePath];
+                }
+                return ['success' => false, 'error' => 'Le fichier PDF n\'a pas été créé.'];
             }
 
             return ['success' => false, 'error' => 'La requête à l\'API Gotenberg a échoué avec le statut ' . $statusCode];
