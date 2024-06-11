@@ -1,0 +1,26 @@
+name: Deploy
+on:
+        pull_request:
+                branches: [ "main" ]
+                types:
+                  - closed
+jobs:
+        build:
+                runs-on: ubuntu-latest
+
+                steps:
+                        - uses: actions/checkout@v1
+                        - name: Gotenberg Microservice Deploy
+                          uses: appleboy/ssh-action@master
+                          with:
+                                  HOST: ${{ secrets.HOST }}
+                                  USERNAME: ${{ secrets.USERNAME }}
+                                  PORT: ${{ secrets.PORT }}
+                                  KEY: ${{ secrets.SSHKEY }}
+                                  script : |
+                                        cd /var/www/gotenberg_microservice
+                                        git clone git@github.com:JulieQuero/gotenberg_microservice.git
+                                        cd gotenberg_microservice
+                                        git pull
+                                        composer install
+                                        php bin/console c:c
