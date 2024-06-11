@@ -24,8 +24,11 @@ class ConvertPdfController extends AbstractController
 
         $response = $this->gotenbergCall->convertToPdf($url);
 
-        return $this->json([
-            'response' => $response
-        ]);
+        if ($response['success']) {
+            $pdfContent = base64_encode($response['content']);
+            return $this->json(['pdf_content' => $pdfContent]);
+        }
+
+        return $this->json(['error' => $response['error']], 500);
     }
 }
