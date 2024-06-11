@@ -18,7 +18,6 @@ class ConvertPdfController extends AbstractController
     #[Route('/convert/pdf/{url}', name: 'app_convert_pdf', methods: ['POST'])]
     public function index(string $url): JsonResponse
     {
-        $url = 'https://sparksuite.github.io/simple-html-invoice-template/';
         if (!$url) {
             return $this->json(['error' => 'URL parameter is missing.'], 400);
         }

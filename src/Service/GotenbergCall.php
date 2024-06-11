@@ -29,18 +29,7 @@ class GotenbergCall
             $statusCode = $response->getStatusCode();
 
             if ($statusCode === 200) {
-                $pdfContent = $response->getContent();
-                $fileName = uniqid('document_', true) . '.pdf';
-                $pdfFilePath = 'pdfs/' . $fileName;
-
-                $filesystem = new Filesystem();
-                $filesystem->dumpFile($pdfFilePath, $pdfContent);
-
-                if ($filesystem->exists($pdfFilePath)) {
-                    return 'Le fichier PDF a été créé avec succès à l\'emplacement : ' . $pdfFilePath;
-                } else {
-                    return 'Impossible de créer le fichier PDF.';
-                }
+                return $response;
             } else {
                 return 'La requête à l\'API Gotenberg a échoué avec le statut ' . $statusCode;
             }
