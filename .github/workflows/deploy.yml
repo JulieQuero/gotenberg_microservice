@@ -18,7 +18,7 @@ jobs:
                                   PORT: ${{ secrets.PORT }}
                                   KEY: ${{ secrets.SSHKEY }}
                                   script : |
-                                        cd /var/www/gotenberg_microservice
+                                        cd /var/www/
                                         git clone git@github.com:JulieQuero/gotenberg_microservice.git
                                         cd gotenberg_microservice
                                         git pull
