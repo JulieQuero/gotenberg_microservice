@@ -14,7 +14,7 @@ class GotenbergCall
     ) {
     }
 
-    public function convertToPdf(string $url): string
+    public function convertToPdf(string $url): array
     {
         try {
             $response = $this->client->request('POST', $_ENV['GOTENBERG_URL'], [
@@ -29,13 +29,13 @@ class GotenbergCall
             $statusCode = $response->getStatusCode();
 
             if ($statusCode === 200) {
-                return $response;
+                return ['success' => true, 'content' => $response->getContent()];
             } else {
-                return 'La requête à l\'API Gotenberg a échoué avec le statut ' . $statusCode;
+                return ['success' => false, 'error' => 'La requête à l\'API Gotenberg a échoué avec le statut ' . $statusCode];
             }
         } catch (\Exception $e) {
             $this->logger->error('Une erreur s\'est produite lors de la génération du PDF : ' . $e->getMessage());
-            return 'Une erreur s\'est produite lors de la génération du PDF : ' . $e->getMessage();
+            return ['success' => false, 'error' => 'Une erreur s\'est produite lors de la génération du PDF : ' . $e->getMessage()];
         }
     }
 }
